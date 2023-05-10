@@ -3,15 +3,18 @@ import json
 from openpyxl import Workbook
 import itertools
 import datetime
+from random import randint
+
+
 
 def epoch_to_date(epoch_time):
         time_stamp = epoch_time / 1000
         date_time = datetime.datetime.fromtimestamp(time_stamp).strftime('%Y-%m-%d %H:%M:%S')
         return date_time
 
-def download_days_stat():
+def download_stat():
         
-    url = "https://open-api.coinglass.com/public/v2/long_short_history?time_type=h1&symbol=BTC"
+    url = f"https://open-api.coinglass.com/public/v2/long_short_history?time_type=h1&symbol=BTC"
 
     headers = {
         "accept": "application/json",
@@ -45,6 +48,5 @@ def download_days_stat():
         ws[row][3].value = p
         row += 1 
 
-    wb.save(f'{datetime.datetime.now()}.xlsx')
+    wb.save(f'{datetime.datetime.now().date()}_days_id{randint(0, 3000)}.xlsx')
 
-    

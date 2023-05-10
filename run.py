@@ -1,19 +1,30 @@
-from tkinter import *
-from tkinter import ttk
-from PIL import Image, ImageTk
-import os
+from tkinter import Tk, ttk
+import os, threading
 from func import daysstat
 import asyncio
-def main():
-    test_path = os.path.basename(__file__)
-    path = os.path.abspath(__file__).replace(test_path, '')
-    root = Tk()
-    root.geometry('200x300')
-    root.resizable(width=0, height=0)
-    ttk.Button(root, text="24 часа", command=daysstat.download_days_stat).place(x=100, y=10)
-    ttk.Button(root, text="30 дней", command=None).place(x=100, y=40)
-    ttk.Button(root, text="Выйти", command=root.destroy).place(x=100, y=70)
-    root.mainloop()
+
+class GuiTkinter(Tk):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.title("BitStat")
+        self.geometry("200x300")
+        self.resizable(False, False)
+        
+        ttk.Button(self, text='Показать статистику', 
+                   command=None
+                   ).grid(column=1, row=1)
+        
+        ttk.Button(self, text='Скачать отчёт 24 часа',
+                   command=self.createThreadDownloadInfo
+                   ).grid(column=1, row=2)
+        
+        ttk.Button(self, text='Закрыть',
+                   command=self.destroy
+                   ).grid(column=1, row=4)
+
+    def createThreadDownloadInfo(self):
+        threading.Thread(target=daysstat.download_stat).start()
+
 
 if __name__ in '__main__':
-    main()
+    app = GuiTkinter().mainloop()
